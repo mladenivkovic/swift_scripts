@@ -155,7 +155,7 @@ timer_names = [
 
 
 cols_to_use = []
-# add +1: 0th column is "step"
+# add +1: 0th column in `timer_names` is "step"
 cols_to_use.append(timer_names.index("gpu_self_pack_density")+1)
 cols_to_use.append(timer_names.index("gpu_self_pack_gradient")+1)
 cols_to_use.append(timer_names.index("gpu_self_pack_force")+1)
@@ -178,18 +178,16 @@ cols_to_use.append(timer_names.index("gpu_pair_recurse")+1)
 
 
 data = np.loadtxt(args.timer_file, usecols=cols_to_use)
-print(data)
 
 
 fig = plt.figure(figsize=(8,8), dpi=200)
 
 ax = fig.add_subplot(111)
 for i, col in enumerate(cols_to_use):
-    print(data[:,i])
     avg = data[:,i].mean()
     minval = data[:,i].min()
     maxval = data[:,i].max()
-    name = timer_names[col-1]
+    name = timer_names[col-1] # subtract 1 to get the index in my hand-made list
     color="C0"
     if "_pack_" in name:
         color = "C0"
