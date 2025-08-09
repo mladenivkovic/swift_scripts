@@ -20,7 +20,6 @@ Usage:
 
 
 def getargs():
-
     """
     Read cmd line args.
     """

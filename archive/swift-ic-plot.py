@@ -65,7 +65,7 @@ def getargs():
 
 def compute_approximate_density(data):
     """
-    Compute approximate density if it is not present in 
+    Compute approximate density if it is not present in
     the IC file.
     """
 
@@ -100,7 +100,7 @@ def compute_approximate_density(data):
             W = kernel_func(dist[i], H)
             rho[p] += W * m[n]
 
-    rho = unyt.unyt_array(rho.value, m.units / x.units ** ndim)
+    rho = unyt.unyt_array(rho.value, m.units / x.units**ndim)
 
     return rho
 

@@ -27,7 +27,6 @@ debugtools = None
 
 
 def getargs():
-
     """
     Read cmd line args.
     """
