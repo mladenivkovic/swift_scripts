@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import argparse
@@ -24,8 +25,20 @@ parser.add_argument(
     type=str,
 )
 
-parser.add_argument("-n", "--nthreads", action="store", default=1, type=int, help="normalise timers assuming N threads")
-parser.add_argument("-s", "--seconds", action="store_true", help="use seconds as units, not milliseconds")
+parser.add_argument(
+    "-n",
+    "--nthreads",
+    action="store",
+    default=1,
+    type=int,
+    help="normalise timers assuming N threads",
+)
+parser.add_argument(
+    "-s",
+    "--seconds",
+    action="store_true",
+    help="use seconds as units, not milliseconds",
+)
 
 
 args = parser.parse_args()
