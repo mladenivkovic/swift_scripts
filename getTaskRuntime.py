@@ -14,7 +14,7 @@ parser.add_argument(
     "timesteps_file",
     nargs="?",
     action="store",
-    default="timers_0.txt",
+    default="timesteps.txt",
     help="file to read in. Default: 'timesteps.txt'",
     type=str,
 )
