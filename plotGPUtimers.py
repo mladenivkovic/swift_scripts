@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
+import matplotlib
+matplotlib.use("Agg")
+
 import argparse
 import os
 import numpy as np
 from matplotlib import pyplot as plt
+
 
 parser = argparse.ArgumentParser(
     prog="plotGPUtimers.py",
@@ -19,7 +23,16 @@ parser.add_argument(
     help="file to read in. Default: 'timers_0.txt'",
     type=str,
 )
+
+parser.add_argument("-n", "--nthreads", action="store", default=1, type=int, help="normalise timers assuming N threads")
+parser.add_argument("-s", "--seconds", action="store_true", help="use seconds as units, not milliseconds")
+
+
 args = parser.parse_args()
+nthreads = args.nthreads
+units = "ms"
+if args.seconds:
+    units = "s"
 
 if not os.path.exists(args.timer_file):
     print(f"Couldn't find timer file {args.timer_file}.")
@@ -186,6 +199,11 @@ cols_to_use.append(timer_names.index("gpu_pair_recurse") + 1)
 
 
 data = np.loadtxt(args.timer_file, usecols=cols_to_use)
+if nthreads > 1:
+    print(f"Normalising times assuming {nthreads} threads")
+    data /= nthreads
+if args.seconds:
+    data *= 1e-3
 
 
 fig = plt.figure(figsize=(8, 8), dpi=200)
@@ -214,6 +232,11 @@ for i, col in enumerate(cols_to_use):
         fmt="o",
         markersize=4,
     )
+
+if nthreads <= 1:
+    ax.set_ylabel(f"Task times [{units}] summed over all threads")
+else:
+    ax.set_ylabel(f"Task times [{units}] averaged per thread ({nthreads} total)")
 
 locs = ax.get_xticks()
 labels = ax.get_xticklabels()
