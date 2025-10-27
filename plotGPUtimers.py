@@ -212,7 +212,7 @@ cols_to_use.append(timer_names.index("gpu_pair_launch_gradient") + 1)
 cols_to_use.append(timer_names.index("gpu_pair_launch_force") + 1)
 cols_to_use.append(timer_names.index("gpu_pair_recurse") + 1)
 
-
+# Load data
 data = np.loadtxt(args.timer_file, usecols=cols_to_use)
 if nthreads > 1:
     print(f"Normalising times assuming {nthreads} threads")
@@ -220,8 +220,49 @@ if nthreads > 1:
 if args.seconds:
     data *= 1e-3
 
+# Print values to screen
+timesum_avg = 0.0
+timesum_total = 0.0
 
-fig = plt.figure(figsize=(8, 8), dpi=200)
+print()
+print("Times averaged over all available measured steps:")
+if nthreads <= 1:
+    print("{0:25} {1:>18s}".format("Task Type", f"Total time {units}"))
+
+    for i, col in enumerate(cols_to_use):
+        avg = data[:, i].mean()
+        name = timer_names[col - 1]  # subtract 1 to get the index in my hand-made list
+
+        print("{0:25} {1:18.3e}".format(name, avg))
+        timesum_avg += avg
+
+    print()
+    print(f"Total: {timesum_avg:18.3e} {units}")
+
+else:
+    print(
+        "{0:25} {1:>18} {2:>18}".format(
+            "Task Type", f"Avg. Time {nthreads} thr", f"Total time {units}"
+        )
+    )
+
+    for i, col in enumerate(cols_to_use):
+        avg = data[:, i].mean()
+        name = timer_names[col - 1]  # subtract 1 to get the index in my hand-made list
+
+        print("{0:25} {1:18.3e} {2:18.3e}".format(name, avg, avg * nthreads))
+        timesum_avg += avg
+        timesum_total += avg * nthreads
+
+    print()
+    print(f"Total: All threads:     {timesum_total:18.3e} {units}")
+    print(f"       Avg. per thread: {timesum_avg:18.3e} {units}")
+print()
+
+
+# Make plot
+
+fig = plt.figure(figsize=(5, 5), dpi=200)
 
 ax = fig.add_subplot(111)
 for i, col in enumerate(cols_to_use):
@@ -255,7 +296,7 @@ else:
 
 locs = ax.get_xticks()
 labels = ax.get_xticklabels()
-ax.set_xticks(locs, labels, rotation="vertical")
+ax.set_xticks(locs, labels, rotation="vertical", fontsize=8)
 ax.set_yscale("log")
 ax.grid()
 
