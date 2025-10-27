@@ -175,6 +175,7 @@ timer_names = [
     "gpu_self_launch_density",
     "gpu_self_launch_gradient",
     "gpu_self_launch_force",
+    "gpu_self_recurse",
     "gpu_pair_pack_density",
     "gpu_pair_pack_gradient",
     "gpu_pair_pack_force",
@@ -199,6 +200,7 @@ cols_to_use.append(timer_names.index("gpu_self_unpack_force") + 1)
 cols_to_use.append(timer_names.index("gpu_self_launch_density") + 1)
 cols_to_use.append(timer_names.index("gpu_self_launch_gradient") + 1)
 cols_to_use.append(timer_names.index("gpu_self_launch_force") + 1)
+cols_to_use.append(timer_names.index("gpu_self_recurse") + 1)
 cols_to_use.append(timer_names.index("gpu_pair_pack_density") + 1)
 cols_to_use.append(timer_names.index("gpu_pair_pack_gradient") + 1)
 cols_to_use.append(timer_names.index("gpu_pair_pack_force") + 1)
