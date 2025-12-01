@@ -39,7 +39,12 @@ parser.add_argument(
     action="store_true",
     help="use seconds as units, not milliseconds",
 )
-
+parser.add_argument(
+    "-z",
+    "--include-step-zero",
+    action="store_true",
+    help="Include the zeroth step in the timing averages",
+)
 
 args = parser.parse_args()
 nthreads = args.nthreads
@@ -50,6 +55,11 @@ if args.seconds:
 if not os.path.exists(args.timer_file):
     print(f"Couldn't find timer file {args.timer_file}.")
     exit(1)
+
+# Which data do we include in the averages?
+first_index = 1
+if args.include_step_zero:
+    first_index = 0
 
 
 timer_names = [
@@ -230,7 +240,7 @@ if nthreads <= 1:
     print("{0:25} {1:>18s}".format("Task Type", f"Total time {units}"))
 
     for i, col in enumerate(cols_to_use):
-        avg = data[:, i].mean()
+        avg = data[first_index:, i].mean()
         name = timer_names[col - 1]  # subtract 1 to get the index in my hand-made list
 
         print("{0:25} {1:18.3e}".format(name, avg))
@@ -247,7 +257,7 @@ else:
     )
 
     for i, col in enumerate(cols_to_use):
-        avg = data[:, i].mean()
+        avg = data[first_index:, i].mean()
         name = timer_names[col - 1]  # subtract 1 to get the index in my hand-made list
 
         print("{0:25} {1:18.3e} {2:18.3e}".format(name, avg, avg * nthreads))
@@ -266,9 +276,9 @@ fig = plt.figure(figsize=(5, 5), dpi=200)
 
 ax = fig.add_subplot(111)
 for i, col in enumerate(cols_to_use):
-    avg = data[:, i].mean()
-    minval = data[:, i].min()
-    maxval = data[:, i].max()
+    avg = data[first_index:, i].mean()
+    minval = data[first_index:, i].min()
+    maxval = data[first_index:, i].max()
     name = timer_names[col - 1]  # subtract 1 to get the index in my hand-made list
     color = "C0"
     if "_pack_" in name:
