@@ -3,6 +3,7 @@
 from swift_hardcoded_data import timer_names
 
 import matplotlib
+
 #  matplotlib.use("Agg")
 
 import argparse
@@ -44,12 +45,10 @@ params = {
     #  "figure.subplot.right": 0.99,
     #  "figure.subplot.bottom": 0.05,
     #  "figure.subplot.top": 0.99,
-    "figure.subplot.wspace": 0.,
+    "figure.subplot.wspace": 0.0,
     #  "figure.subplot.hspace": 0.12,
 }
 matplotlib.rcParams.update(params)
-
-
 
 
 parser = argparse.ArgumentParser(
@@ -80,7 +79,6 @@ parser.add_argument(
     action="store_true",
     help="Plot times by operation, not by task subtype",
 )
-
 
 
 args = parser.parse_args()
@@ -122,35 +120,28 @@ for node in node_dirs:
         data = np.loadtxt(fullfile, usecols=cols_to_use)
 
         density = {
-                "pack": data[first_index:, 0].sum(),
-                "unpack": data[first_index:, 3].sum(),
-                "launch": data[first_index:, 6].sum(),
-                }
+            "pack": data[first_index:, 0].sum(),
+            "unpack": data[first_index:, 3].sum(),
+            "launch": data[first_index:, 6].sum(),
+        }
         gradient = {
-                "pack": data[first_index:, 1].sum(),
-                "unpack": data[first_index:, 4].sum(),
-                "launch": data[first_index:, 7].sum(),
-                }
+            "pack": data[first_index:, 1].sum(),
+            "unpack": data[first_index:, 4].sum(),
+            "launch": data[first_index:, 7].sum(),
+        }
         force = {
-                "pack": data[first_index:, 2].sum(),
-                "unpack": data[first_index:, 5].sum(),
-                "launch": data[first_index:, 8].sum(),
-                }
+            "pack": data[first_index:, 2].sum(),
+            "unpack": data[first_index:, 5].sum(),
+            "launch": data[first_index:, 8].sum(),
+        }
 
         density["total"] = density["pack"] + density["unpack"] + density["launch"]
         gradient["total"] = gradient["pack"] + gradient["unpack"] + gradient["launch"]
         force["total"] = force["pack"] + force["unpack"] + force["launch"]
 
-
-        experiment_result = {
-                "density": density,
-                "gradient": gradient,
-                "force": force
-                }
+        experiment_result = {"density": density, "gradient": gradient, "force": force}
 
         results[node][experiment] = experiment_result
-
-
 
 
 # Make plot
@@ -161,17 +152,22 @@ ax2 = fig.add_subplot(132, sharey=ax1)
 ax3 = fig.add_subplot(133, sharey=ax1)
 
 
-
 nbars = len(node_dirs) + len(experiment_dirs)
 
 x = np.arange(3)
-width = 1. / (nbars + 1)
+width = 1.0 / (nbars + 1)
 
 # bar/ticks are centered on bar at location of x, so it starts already
 # shifted by width/2.
 xticks = x + 0.5 * (nbars - 1) * width
 
-hatches = ['\\\\\\\\\\\\', "//////", "||", "--", ]
+hatches = [
+    "\\\\\\\\\\\\",
+    "//////",
+    "||",
+    "--",
+]
+
 
 def plot_by_task_subtype(ax, task_type, title):
     """
@@ -196,15 +192,15 @@ def plot_by_task_subtype(ax, task_type, title):
 
             color = "C" + str(n)
             offset = index * width
-            label =  node + "/" + experiment
+            label = node + "/" + experiment
             hatch = hatches[e]
             pltkwargs = {
-                    "color": color,
-                    "edgecolor": color,
-                    "width": width,
-                    "hatch": hatch,
-                    "fill": False,
-                    }
+                "color": color,
+                "edgecolor": color,
+                "width": width,
+                "hatch": hatch,
+                "fill": False,
+            }
 
             ax.bar(x[0] + offset, pack / total, **pltkwargs, label=label)
             ax.bar(x[1] + offset, launch / total, **pltkwargs)
@@ -216,7 +212,6 @@ def plot_by_task_subtype(ax, task_type, title):
     ax.set_xticks(xticks, ["pack", "launch", "unpack"])
 
     return
-
 
 
 def plot_by_operation(ax, operation, title):
@@ -246,22 +241,21 @@ def plot_by_operation(ax, operation, title):
 
             color = "C" + str(n)
             offset = index * width
-            label =  node + "/" + experiment
+            label = node + "/" + experiment
             hatch = hatches[e]
             pltkwargs = {
-                    "color": color,
-                    "edgecolor": color,
-                    "width": width,
-                    "hatch": hatch,
-                    "fill": False,
-                    }
+                "color": color,
+                "edgecolor": color,
+                "width": width,
+                "hatch": hatch,
+                "fill": False,
+            }
 
             ax.bar(x[0] + offset, density / total_density, **pltkwargs, label=label)
             ax.bar(x[1] + offset, gradient / total_gradient, **pltkwargs)
             ax.bar(x[2] + offset, force / total_force, **pltkwargs)
 
             index += 1
-
 
     ax.set_title(title)
     ax.set_xticks(xticks, ["density", "gradient", "force"])
@@ -270,14 +264,10 @@ def plot_by_operation(ax, operation, title):
     return
 
 
-
-
-
 if by_operation:
     plot_by_operation(ax1, "pack", "Pack")
     plot_by_operation(ax2, "launch", "Launch")
     plot_by_operation(ax3, "unpack", "Unpack")
-
 
 
 else:
@@ -296,15 +286,13 @@ ax3.legend()
 #  ax3.set_yticklabels([])
 
 
-
-plt.tight_layout() #rect=(0.05, 0.05, 0.95, 0.95))
+plt.tight_layout()  # rect=(0.05, 0.05, 0.95, 0.95))
 
 #  plt.show()
-figname="gpu_timers_paper.pdf"
+figname = "gpu_timers_paper.pdf"
 if by_operation:
-    figname="gpu_timers_paper_by_operation.pdf"
+    figname = "gpu_timers_paper_by_operation.pdf"
 
 #  plt.show()
 plt.savefig(figname)
 print(figname)
-

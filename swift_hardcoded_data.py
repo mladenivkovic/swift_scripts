@@ -127,5 +127,3 @@ timer_names = [
     "gpu_pair_recurse",
     # timer count
 ]
-
-
