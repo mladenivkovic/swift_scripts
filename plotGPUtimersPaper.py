@@ -3,7 +3,6 @@
 from swift_hardcoded_data import timer_names
 
 import matplotlib
-
 #  matplotlib.use("Agg")
 
 import argparse
@@ -20,6 +19,37 @@ from matplotlib import pyplot as plt
 node_dirs = ["gn001", "gn002"]
 experiment_dirs = ["eagle12", "gresho256"]
 timer_file = "timers_0.txt"
+
+# ------------------------------------------------------
+
+
+# Plot parameters
+params = {
+    "axes.labelsize": 14,
+    "axes.titlesize": 18,
+    "font.size": 16,
+    "font.family": "serif",
+    "legend.fontsize": 12,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "xtick.direction": "in",
+    "ytick.direction": "in",
+    "xtick.top": True,
+    "ytick.right": True,
+    "xtick.major.width": 1.5,
+    "ytick.major.width": 1.5,
+    "axes.linewidth": 1.5,
+    "text.usetex": True,
+    #  "figure.subplot.left": 0.045,
+    #  "figure.subplot.right": 0.99,
+    #  "figure.subplot.bottom": 0.05,
+    #  "figure.subplot.top": 0.99,
+    "figure.subplot.wspace": 0.,
+    #  "figure.subplot.hspace": 0.12,
+}
+matplotlib.rcParams.update(params)
+
+
 
 
 parser = argparse.ArgumentParser(
@@ -125,10 +155,12 @@ for node in node_dirs:
 
 # Make plot
 
-fig = plt.figure(figsize=(15, 5), dpi=200)
+fig = plt.figure(figsize=(14, 4), dpi=200)
 ax1 = fig.add_subplot(131)
-ax2 = fig.add_subplot(132)
-ax3 = fig.add_subplot(133)
+ax2 = fig.add_subplot(132, sharey=ax1)
+ax3 = fig.add_subplot(133, sharey=ax1)
+
+
 
 nbars = len(node_dirs) + len(experiment_dirs)
 
@@ -139,6 +171,7 @@ width = 1. / (nbars + 1)
 # shifted by width/2.
 xticks = x + 0.5 * (nbars - 1) * width
 
+hatches = ['\\\\\\\\\\\\', "//////", "||", "--", ]
 
 def plot_by_task_subtype(ax, task_type, title):
     """
@@ -153,20 +186,24 @@ def plot_by_task_subtype(ax, task_type, title):
     """
 
     index = 0
-    for node in node_dirs:
-        for experiment in experiment_dirs:
+    for n, node in enumerate(node_dirs):
+        for e, experiment in enumerate(experiment_dirs):
 
             pack = results[node][experiment][task_type]["pack"]
             unpack = results[node][experiment][task_type]["unpack"]
             launch = results[node][experiment][task_type]["launch"]
             total = results[node][experiment][task_type]["total"]
 
-            color = "C" + str(index)
+            color = "C" + str(n)
             offset = index * width
             label =  node + "/" + experiment
+            hatch = hatches[e]
             pltkwargs = {
                     "color": color,
+                    "edgecolor": color,
                     "width": width,
+                    "hatch": hatch,
+                    "fill": False,
                     }
 
             ax.bar(x[0] + offset, pack / total, **pltkwargs, label=label)
@@ -196,8 +233,8 @@ def plot_by_operation(ax, operation, title):
     """
 
     index = 0
-    for node in node_dirs:
-        for experiment in experiment_dirs:
+    for n, node in enumerate(node_dirs):
+        for e, experiment in enumerate(experiment_dirs):
 
             density = results[node][experiment]["density"][operation]
             gradient = results[node][experiment]["gradient"][operation]
@@ -207,12 +244,16 @@ def plot_by_operation(ax, operation, title):
             total_gradient = results[node][experiment]["gradient"]["total"]
             total_force = results[node][experiment]["force"]["total"]
 
-            color = "C" + str(index)
+            color = "C" + str(n)
             offset = index * width
             label =  node + "/" + experiment
+            hatch = hatches[e]
             pltkwargs = {
                     "color": color,
+                    "edgecolor": color,
                     "width": width,
+                    "hatch": hatch,
+                    "fill": False,
                     }
 
             ax.bar(x[0] + offset, density / total_density, **pltkwargs, label=label)
@@ -220,6 +261,7 @@ def plot_by_operation(ax, operation, title):
             ax.bar(x[2] + offset, force / total_force, **pltkwargs)
 
             index += 1
+
 
     ax.set_title(title)
     ax.set_xticks(xticks, ["density", "gradient", "force"])
@@ -245,9 +287,13 @@ else:
 
 
 for ax in fig.axes:
-    ax.legend()
-    ax.grid()
-ax1.set_ylabel("Fraction of total time for offload")
+    #  ax.legend()
+    ax.grid(axis="y")
+
+ax1.set_ylabel("Fraction of total time (per interaction loop)")
+ax3.legend()
+#  ax2.set_yticklabels([])
+#  ax3.set_yticklabels([])
 
 
 
@@ -258,6 +304,7 @@ figname="gpu_timers_paper.pdf"
 if by_operation:
     figname="gpu_timers_paper_by_operation.pdf"
 
+#  plt.show()
 plt.savefig(figname)
 print(figname)
 
