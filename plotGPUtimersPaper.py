@@ -17,8 +17,15 @@ from matplotlib import pyplot as plt
 # for all node_dir in node_dirs and for all
 # experiment_dir in experiment_dirs
 
-node_dirs = ["gn001", "gn002"]
-experiment_dirs = ["eagle12", "gresho256"]
+#  node_dirs = ["gn001", "gn002"]
+node_dirs = ["dine2", "gn002"]
+#  experiment_dirs = ["eagle12", "gresho256"]
+experiment_dirs = ["gresho256"]
+nodelabels = {
+        "dine2": "Intel+A30",
+        "gn002": "Grace Hopper",
+        "gn001": "Intel+V100",
+        }
 timer_file = "timers_0.txt"
 
 # ------------------------------------------------------
@@ -192,7 +199,8 @@ def plot_by_task_subtype(ax, task_type, title):
 
             color = "C" + str(n)
             offset = index * width
-            label = node + "/" + experiment
+            #  label = node + "/" + experiment
+            label = nodelabels[node]
             hatch = hatches[e]
             pltkwargs = {
                 "color": color,
@@ -205,6 +213,10 @@ def plot_by_task_subtype(ax, task_type, title):
             ax.bar(x[0] + offset, pack / total, **pltkwargs, label=label)
             ax.bar(x[1] + offset, launch / total, **pltkwargs)
             ax.bar(x[2] + offset, unpack / total, **pltkwargs)
+
+            print(node, "pack:", pack/total * 100, "%")
+            print(node, "launch:", launch/total * 100, "%")
+            print(node, "unpack:", unpack/total * 100, "%")
 
             index += 1
 
@@ -241,7 +253,8 @@ def plot_by_operation(ax, operation, title):
 
             color = "C" + str(n)
             offset = index * width
-            label = node + "/" + experiment
+            #  label = node + "/" + experiment
+            label = nodelabels[node]
             hatch = hatches[e]
             pltkwargs = {
                 "color": color,
@@ -255,6 +268,9 @@ def plot_by_operation(ax, operation, title):
             ax.bar(x[1] + offset, gradient / total_gradient, **pltkwargs)
             ax.bar(x[2] + offset, force / total_force, **pltkwargs)
 
+            print(experiment, node, operation, "density:", density/total_density * 100, "%")
+            print(experiment, node, operation, "gradient:", gradient/total_gradient * 100, "%")
+            print(experiment, node, operation, "force:", force/total_force * 100, "%")
             index += 1
 
     ax.set_title(title)
@@ -265,9 +281,9 @@ def plot_by_operation(ax, operation, title):
 
 
 if by_operation:
-    plot_by_operation(ax1, "pack", "Pack")
+    plot_by_operation(ax1, "pack", "Packing")
     plot_by_operation(ax2, "launch", "Launch")
-    plot_by_operation(ax3, "unpack", "Unpack")
+    plot_by_operation(ax3, "unpack", "Unpacking")
 
 
 else:
@@ -280,7 +296,8 @@ for ax in fig.axes:
     #  ax.legend()
     ax.grid(axis="y")
 
-ax1.set_ylabel("Fraction of total time (per interaction loop)")
+#  ax1.set_ylabel("Fraction of total time (per interaction loop)")
+ax1.set_ylabel(r"$t_{\mathrm{op}}$ / $t_{\mathrm{tot}}$")
 ax3.legend()
 #  ax2.set_yticklabels([])
 #  ax3.set_yticklabels([])
