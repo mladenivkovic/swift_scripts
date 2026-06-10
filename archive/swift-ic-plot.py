@@ -14,7 +14,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import colors as mcolors
 
-
 # Plot parameters
 params = {
     "axes.labelsize": 10,
@@ -43,12 +42,10 @@ def getargs():
     Read cmd line args.
     """
 
-    parser = argparse.ArgumentParser(
-        description="""
+    parser = argparse.ArgumentParser(description="""
         A program to quickly plot swift outputs.
         Will plot mass projection along z axis as default.
-        """
-    )
+        """)
 
     #  parser.add_help(True)
     parser.add_argument("filename")

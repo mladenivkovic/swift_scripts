@@ -15,7 +15,6 @@ import argparse
 from swiftsimio import load
 from swiftsimio.visualisation.projection import project_gas
 
-
 infile = None
 
 names = {}
@@ -57,12 +56,10 @@ def getargs():
     Read cmd line args.
     """
 
-    parser = argparse.ArgumentParser(
-        description="""
+    parser = argparse.ArgumentParser(description="""
         A program to quickly plot swift outputs.
         Will plot mass projection along z axis as default.
-        """
-    )
+        """)
 
     #  parser.add_help(True)
     parser.add_argument("filename")

@@ -11,7 +11,6 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-
 # Assumed directory structure:
 #  `node_dir/experiment_dir`
 # for all node_dir in node_dirs and for all
@@ -22,10 +21,10 @@ node_dirs = ["dine2", "gn002"]
 #  experiment_dirs = ["eagle12", "gresho256"]
 experiment_dirs = ["gresho256"]
 nodelabels = {
-        "dine2": "Intel+A30",
-        "gn002": "Grace Hopper",
-        "gn001": "Intel+V100",
-        }
+    "dine2": "Intel+A30",
+    "gn002": "Grace Hopper",
+    "gn001": "Intel+V100",
+}
 timer_file = "timers_0.txt"
 
 # ------------------------------------------------------
@@ -214,9 +213,9 @@ def plot_by_task_subtype(ax, task_type, title):
             ax.bar(x[1] + offset, launch / total, **pltkwargs)
             ax.bar(x[2] + offset, unpack / total, **pltkwargs)
 
-            print(node, "pack:", pack/total * 100, "%")
-            print(node, "launch:", launch/total * 100, "%")
-            print(node, "unpack:", unpack/total * 100, "%")
+            print(node, "pack:", pack / total * 100, "%")
+            print(node, "launch:", launch / total * 100, "%")
+            print(node, "unpack:", unpack / total * 100, "%")
 
             index += 1
 
@@ -268,9 +267,23 @@ def plot_by_operation(ax, operation, title):
             ax.bar(x[1] + offset, gradient / total_gradient, **pltkwargs)
             ax.bar(x[2] + offset, force / total_force, **pltkwargs)
 
-            print(experiment, node, operation, "density:", density/total_density * 100, "%")
-            print(experiment, node, operation, "gradient:", gradient/total_gradient * 100, "%")
-            print(experiment, node, operation, "force:", force/total_force * 100, "%")
+            print(
+                experiment,
+                node,
+                operation,
+                "density:",
+                density / total_density * 100,
+                "%",
+            )
+            print(
+                experiment,
+                node,
+                operation,
+                "gradient:",
+                gradient / total_gradient * 100,
+                "%",
+            )
+            print(experiment, node, operation, "force:", force / total_force * 100, "%")
             index += 1
 
     ax.set_title(title)

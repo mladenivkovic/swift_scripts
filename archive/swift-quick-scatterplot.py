@@ -15,7 +15,6 @@ import argparse
 
 from swiftsimio import load
 
-
 # Plot parameters
 params = {
     "axes.labelsize": 10,
@@ -43,12 +42,10 @@ def getargs():
     Read cmd line args.
     """
 
-    parser = argparse.ArgumentParser(
-        description="""
+    parser = argparse.ArgumentParser(description="""
         A program to quickly plot swift outputs.
         Will plot position scatter plot along z axis.
-        """
-    )
+        """)
 
     #  parser.add_help(True)
     parser.add_argument("filename", help="IC or output file name to plot")

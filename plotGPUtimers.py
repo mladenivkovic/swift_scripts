@@ -11,7 +11,6 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 
-
 parser = argparse.ArgumentParser(
     prog="plotGPUtimers.py",
     description="plot the outputs of the timers.",

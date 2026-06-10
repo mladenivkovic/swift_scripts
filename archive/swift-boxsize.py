@@ -11,7 +11,6 @@ import numpy as np
 import argparse
 import h5py
 
-
 errormsg = """
 I need a file as a cmd line arg to print it.
 Usage:
@@ -27,11 +26,9 @@ def getargs():
     import sys
     import os
 
-    parser = argparse.ArgumentParser(
-        description="""
+    parser = argparse.ArgumentParser(description="""
         A program to print particle data.
-            """
-    )
+            """)
 
     parser.add_argument("filename")
 
