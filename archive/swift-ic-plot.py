@@ -140,7 +140,7 @@ def plot_1D(data):
 
 def plot_2D(data):
     """
-    creates 1D plots.
+    creates 2D plots.
     data: swift IC file data as returned from swiftsimio.load()
     """
 
