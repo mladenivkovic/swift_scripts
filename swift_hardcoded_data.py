@@ -127,3 +127,14 @@ timer_names = [
     "gpu_pair_recurse",
     # timer count
 ]
+
+# particle type enum indexes
+SWIFT_TYPE_GAS = 0
+SWIFT_TYPE_DARK_MATTER = 1
+SWIFT_TYPE_DARK_MATTER_BACKGROUND = 2
+SWIFT_TYPE_SINK = 3
+SWIFT_TYPE_STARS = 4
+SWIFT_TYPE_BLACK_HOLE = 5
+SWIFT_TYPE_NEUTRINO = 6
+SWIFT_TYPE_COUNT = 7
+
