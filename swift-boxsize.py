@@ -27,7 +27,7 @@ def getargs():
     import os
 
     parser = argparse.ArgumentParser(description="""
-        A program to print particle data.
+        A program to print the boxsize of SWIFT output.
             """)
 
     parser.add_argument("filename")
