@@ -98,7 +98,25 @@ def getargs():
         default=False,
         help="Don't add title and axis labels to plot",
     )
-
+    parser.add_argument(
+        "-c",
+        "--color",
+        "--colour",
+        required=False,
+        dest="colour",
+        action="store_true",
+        default=False,
+        help="Colour in the particles by type",
+    )
+    parser.add_argument(
+        "-d",
+        "--dots",
+        required=False,
+        dest="dots",
+        action="store_true",
+        default=False,
+        help="Use dots instead of (small) circles for particles",
+    )
 
 
     args = parser.parse_args()
@@ -109,19 +127,28 @@ def getargs():
     plot_dm = args.plot_dm
     plot_stars = args.plot_stars
     plain = args.plain
+    colour = args.colour
+    dots = args.dots
 
-    return infile, draw_legend, plot_hydro, plot_dm, plot_stars, plain
+    return infile, draw_legend, plot_hydro, plot_dm, plot_stars, plain, colour, dots
 
 
 def main():
 
-    infile, draw_legend, plot_hydro, plot_dm, plot_stars, plain = getargs()
+    infile, draw_legend, plot_hydro, plot_dm, plot_stars, plain, use_colour, dots = getargs()
     plot_all = (not plot_hydro) and (not plot_dm) and (not plot_stars)
 
     data = load(infile)
     meta = data.metadata
     boxsize = meta.boxsize
     available_types = meta.header["CanHaveTypes"]
+
+    scatter_kwargs = {"alpha": 0.5}
+
+    colours = {"dm": "k", "hydro": "k", "stars":"k"}
+    if use_colour or draw_legend:
+        colours = {"dm": "red", "hydro": "blue", "stars":"gold"}
+
 
 
     # check for redshift and time. Might be missing
@@ -151,7 +178,7 @@ def main():
             h1 = ax.scatter(
                 data.dark_matter.coordinates[:, 0],
                 data.dark_matter.coordinates[:, 1],
-                fc="red",
+                fc=colours["dm"],
                 label="DM",
                 alpha=0.5,
             )
@@ -167,7 +194,7 @@ def main():
             h2 = ax.scatter(
                 data.gas.coordinates[:, 0],
                 data.gas.coordinates[:, 1],
-                fc="blue",
+                fc=colours["hydro"],
                 label="gas",
                 alpha=0.5,
             )
@@ -182,7 +209,7 @@ def main():
             h3 = ax.scatter(
                 data.stars.coordinates[:, 0],
                 data.stars.coordinates[:, 1],
-                fc="gold",
+                fc=colours["stars"],
                 label="stars",
                 alpha=0.5,
             )
@@ -210,7 +237,9 @@ def main():
 
     if plain:
         ax.set_xticklabels([])
+        ax.set_xticks([])
         ax.set_yticklabels([])
+        ax.set_yticks([])
     else:
         ax.set_title(title)
         ax.set_xlabel("x [{}]".format(boxsize.units))
@@ -226,6 +255,8 @@ def main():
     elif infile[-3:] == ".h5":
         outfile = infile.replace(".h5", "")
     outfile += "-scatter.png"
+
+    plt.tight_layout()
 
     plt.savefig(outfile, dpi=200)
 
