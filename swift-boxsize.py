@@ -60,17 +60,25 @@ def read_file(srcfile):
 
     boxsize = h.attrs["BoxSize"]
 
+    u = f["Units"]
+    unit = u.attrs["Unit length in cgs (U_L)"]
+
     f.close()
 
-    return boxsize
+    return boxsize, unit
 
 
 def main():
 
     fname = getargs()
-    boxsize = read_file(fname)
+    boxsize, unit = read_file(fname)
 
-    print("Boxsize is:", boxsize)
+    pc = 3.0857e18 # parsec in cm
+
+    print(f"Boxsize is ")
+    print(f"        {boxsize} x {unit[0] :.3e} cm")
+    print(f"        {boxsize} x {unit[0] / pc :.3e} pc")
+    print(f"        {boxsize} x {unit[0] / (pc * 1e6):.3e} Mpc")
 
     return
 
