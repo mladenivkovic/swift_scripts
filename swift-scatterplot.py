@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # =====================================
-# a quick plot for swift outputs
+# a quick scatterplot for SWIFT output
 # =====================================
 
 
